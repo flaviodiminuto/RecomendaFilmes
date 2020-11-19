@@ -3,6 +3,7 @@ package com.sexto.ia.controller;
 import com.sexto.ia.model.Filme;
 import com.sexto.ia.service.FilmeService;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

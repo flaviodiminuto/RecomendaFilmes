@@ -7,6 +7,7 @@ import com.sexto.ia.service.FilmeService;
 import com.sexto.ia.service.RecomendadorService;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.model.DataModel;
+import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 
 import javax.inject.Inject;
@@ -18,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Path("/recomendacao")
 public class RecomendacaoController {
@@ -30,16 +33,23 @@ public class RecomendacaoController {
     @GET
     @Path("/{user_id}/{quantidade_recomendacao}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Filme> recumenda(@PathParam("user_id") Long userId,
+    public List<?> recumenda(@PathParam("user_id") Long userId,
                                  @PathParam("quantidade_recomendacao") int quantidadeRecomendacao )
                                 throws IOException, TasteException {
-        if(service == null) {
+        if (service == null) {
             DataModel dataModel = new Recomendador().getModeloFilmes();
             Recommender recommender = new RecomendadorBuilder().buildRecommender(dataModel);
             service = new RecomendadorService(recommender);
         }
-        List<Filme> filmes = new ArrayList<>();
-        service.recomenda(userId,quantidadeRecomendacao).forEach(r-> filmes.add(filmeService.getFilme(r.getItemID())));
-        return filmes;
+        List<RecommendedItem> recomendacoes =  service.recomenda(userId, quantidadeRecomendacao);
+
+        List<Filme> filmes = recomendacoes.stream()
+                .map(r -> filmeService.getFilme(r.getItemID()) )
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        if(filmes.size() != recomendacoes.size())
+            return recomendacoes;
+        else
+            return filmes;
     }
 }
