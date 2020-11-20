@@ -17,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class RecomendacaoController {
         List<RecommendedItem> recomendacoes =  service.recomenda(userId, quantidadeRecomendacao);
 
         List<Filme> filmes = recomendacoes.stream()
-                .map(r -> filmeService.getFilme(r.getItemID()) )
+                .map(r -> filmeService.findById(r.getItemID()) )
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         if(filmes.size() != recomendacoes.size())

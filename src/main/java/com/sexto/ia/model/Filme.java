@@ -1,31 +1,28 @@
 package com.sexto.ia.model;
 
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Set;
+
+@Entity
+@Data
 public class Filme {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE )
+    @Column(name = "filme_id")
     private Long id;
     private String titulo;
-    private String[] generos;
 
-    public Long getId() {
-        return id;
+    public Filme() {
     }
 
-    public void setId(Long id) {
+    public Filme(Long id, String titulo) {
         this.id = id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+    @ManyToMany(cascade={CascadeType.ALL})
+    @JoinTable(name="filme_genero", joinColumns=@JoinColumn(name= "filme_id"))
+    private Set<Genero> genero;
 
-    public String[] getGeneros() {
-        return generos;
-    }
-
-    public void setGeneros(String generos) {
-        this.generos = generos.split("\\|");
-    }
 }

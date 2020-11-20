@@ -3,12 +3,8 @@ package com.sexto.ia.controller;
 import com.sexto.ia.model.Filme;
 import com.sexto.ia.service.FilmeService;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -25,11 +21,18 @@ public class FilmesController {
         return filmes;
     }
 
-
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Filme getFilmeById(@PathParam("id") Long id){
-        return filmeService.getFilme(id);
+        return filmeService.findById(id);
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Filme post(Filme filme){
+        filmeService.save(filme);
+        return filme;
     }
 }
