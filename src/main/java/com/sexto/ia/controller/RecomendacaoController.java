@@ -17,9 +17,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Path("/recomendacao")
 public class RecomendacaoController {
@@ -35,20 +36,32 @@ public class RecomendacaoController {
     public List<?> recumenda(@PathParam("user_id") Long userId,
                                  @PathParam("quantidade_recomendacao") int quantidadeRecomendacao )
                                 throws IOException, TasteException {
+        int quantidadeEfetiva = quantidadeRecomendacao;
         if (service == null) {
             DataModel dataModel = new Recomendador().getModeloFilmes();
             Recommender recommender = new RecomendadorBuilder().buildRecommender(dataModel);
             service = new RecomendadorService(recommender);
         }
-        List<RecommendedItem> recomendacoes =  service.recomenda(userId, quantidadeRecomendacao);
-
-        List<Filme> filmes = recomendacoes.stream()
-                .map(r -> filmeService.findById(r.getItemID()) )
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        if(filmes.size() != recomendacoes.size())
-            return recomendacoes;
-        else
-            return filmes;
+        int quantidadeObtida = 0;
+        Set<Filme> filmes = new HashSet<>();
+        do {
+            List<RecommendedItem> recomendacoes = service.recomenda(userId, quantidadeEfetiva);
+            recomendacoes.stream()
+                    .forEach(r ->{
+                       Filme filme = filmeService.findById(r.getItemID());
+                       if(filme != null){
+                           filme.setAvaliacao((double) r.getValue());
+                           filmes.add(filme);
+                       }
+                    });
+            quantidadeObtida = filmes.size();
+            quantidadeEfetiva += 10;
+        }while (quantidadeRecomendacao > quantidadeObtida);
+        List<Filme> finalList = new ArrayList<>();
+        List<Filme> filmesList = new ArrayList<>(filmes);
+        for (int i = 0; i < quantidadeRecomendacao; i++) {
+            finalList.add(filmesList.get(i));
+        }
+            return finalList;
     }
 }

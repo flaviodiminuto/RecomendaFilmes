@@ -1,10 +1,9 @@
 package com.sexto.ia.controller;
 
 import com.opencsv.exceptions.CsvValidationException;
-import com.sexto.ia.initilizacao.CsvService;
+import com.sexto.ia.initilizacao.InicializaBanco;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,13 +17,15 @@ import java.io.IOException;
 public class Config {
 
     @Inject
-    CsvService csvService;
+    InicializaBanco service;
 
     @POST
     @Path("/filmes")
     @Produces(MediaType.TEXT_PLAIN)
-    public String post() throws IOException, CsvValidationException, InterruptedException {
-        long registrosSalvos = csvService.saveToDatabase();
+    public String post() throws IOException, CsvValidationException{
+        long registrosSalvos = service.loadFilmes();
+        service.loadGeneros();
+        service.loadVinculos();
         return String.format("Foram sanvos %d registros com sucesso!", registrosSalvos);
     }
 }

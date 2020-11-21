@@ -13,6 +13,11 @@ public class Filme {
     @Column(name = "filme_id")
     private Long id;
     private String titulo;
+    @ManyToMany(cascade={CascadeType.ALL})
+    @JoinTable(name="filme_genero", joinColumns=@JoinColumn(name= "filme_id"))
+    private Set<Genero> generos;
+    @Column(nullable = true)
+    private Double avaliacao;
 
     public Filme() {
     }
@@ -21,8 +26,5 @@ public class Filme {
         this.id = id;
         this.titulo = titulo;
     }
-    @ManyToMany(cascade={CascadeType.ALL})
-    @JoinTable(name="filme_genero", joinColumns=@JoinColumn(name= "filme_id"))
-    private Set<Genero> generos;
 
 }
