@@ -60,11 +60,11 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>3.3.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.apache.hadoop</groupId>-->
+<!--      <artifactId>hadoop-client</artifactId>-->
+<!--      <version>3.3.0</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.apache.mahout</groupId>
       <artifactId>mahout-mr</artifactId>

@@ -23,7 +23,7 @@ public class Config {
     @POST
     @Path("/filmes")
     @Produces(MediaType.TEXT_PLAIN)
-    public String post() throws IOException, CsvValidationException {
+    public String post() throws IOException, CsvValidationException, InterruptedException {
         long registrosSalvos = csvService.saveToDatabase();
         return String.format("Foram sanvos %d registros com sucesso!", registrosSalvos);
     }

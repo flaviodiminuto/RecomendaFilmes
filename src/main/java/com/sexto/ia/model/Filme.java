@@ -9,7 +9,7 @@ import java.util.Set;
 @Data
 public class Filme {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE )
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     @Column(name = "filme_id")
     private Long id;
     private String titulo;
@@ -23,6 +23,6 @@ public class Filme {
     }
     @ManyToMany(cascade={CascadeType.ALL})
     @JoinTable(name="filme_genero", joinColumns=@JoinColumn(name= "filme_id"))
-    private Set<Genero> genero;
+    private Set<Genero> generos;
 
 }
