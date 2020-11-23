@@ -44,7 +44,7 @@ public class InicializaBanco {
                     .append("'),\n");
             String[] generos = nextLine[2].split("\\|");
             //Preencher para o filme  chave valor variavel(Long, List<String>) (1,[Adventure|Animation|Children|Comedy|Fantasy])
-            filme_genero.put(cont, Arrays.asList(generos));
+            filme_genero.put(contador, Arrays.asList(generos));
             //Preencher para o genero chave valor list(String)
             generoSet.addAll(Arrays.asList(generos));
 
