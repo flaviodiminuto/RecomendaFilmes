@@ -29,7 +29,7 @@ public class InicializaBanco {
         //Ler arquivo converdo array[]
         if(repository.findById(1L) != null) return 0L;
         long contador = 0;
-        CSVReader reader = new CSVReader(new FileReader("C:\\Projetos\\recomendacao\\src\\main\\resources\\movies.csv"));
+        CSVReader reader = new CSVReader(new FileReader("src/main/resources/movies.csv"));
         String[] nextLine;
         long cont = 0;
         StringBuilder valores = new StringBuilder();

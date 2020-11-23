@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class Recomendador {
     public DataModel getModeloFilmes() throws IOException {
-        File file = new File("C:\\Projetos\\recomendacao\\src\\main\\resources\\ratings.csv");
+        File file = new File("src/main/resources/ratings.csv");
         return new FileDataModel(file);
     }
 }
