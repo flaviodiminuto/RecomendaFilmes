@@ -35,7 +35,6 @@ public class InicializaBanco {
         StringBuilder valores = new StringBuilder();
         //Gerar uma string de insert
         while ((nextLine = reader.readNext()) != null) {
-            //1,Toy Story (1995),Adventure|Animation|Children|Comedy|Fantasy,
             contador++;
             ++cont;
             valores.append("('").append(nextLine[1]
@@ -50,9 +49,6 @@ public class InicializaBanco {
 
             if(cont >= 1000){
                 String insert = String.format(BASE_INSERT,valores.substring(0,valores.length()-2)).concat(";");
-                System.out.println("\n\n\n\nPRIMEIRA MILHA PERCORRIDA\n\n");
-                System.out.println(insert);
-//                break;
                 commit(insert);
                 valores = new StringBuilder();
                 cont = 0;
@@ -66,7 +62,6 @@ public class InicializaBanco {
     public void loadGeneros(){
         String insert = "INSERT INTO genero (nome) values ('%s')";
         generoSet.forEach(genero -> commit(String.format(insert,genero)));
-        System.out.println(generoSet);
     }
 
     @Transactional
