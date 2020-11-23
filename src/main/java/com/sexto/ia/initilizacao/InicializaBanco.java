@@ -57,7 +57,6 @@ public class InicializaBanco {
                 valores = new StringBuilder();
                 cont = 0;
             }
-
         }
         commit(String.format(BASE_INSERT,valores.substring(0,valores.length()-2)).concat(";"));
         return contador;
@@ -76,13 +75,11 @@ public class InicializaBanco {
         String insert = "INSERT INTO filme_genero (filme_id,generos_genero_id)VALUES (%d,%d);";
         filme_genero.forEach((filme_id, generosFilme ) -> {
             List<String> generoTabela = new ArrayList<>(generoSet);
-            generosFilme.forEach(genero ->{
-                String ins = String.format(insert,filme_id,generoTabela.indexOf(genero)+1);
+            generosFilme.forEach(genero -> {
+                String ins = String.format(insert, filme_id, generoTabela.indexOf(genero) + 1);
                 commit(ins);
-                System.out.println(ins);
             });
         });
-
     }
 
     private void commit(String insert) {
@@ -92,5 +89,8 @@ public class InicializaBanco {
         em.flush();
     }
 
-
+    public void zerarValores(){
+        this.filme_genero = new HashMap<>();
+        this.generoSet = new HashSet<>();
+    }
 }
