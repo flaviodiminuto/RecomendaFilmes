@@ -13,7 +13,7 @@ public class Filme {
     @Column(name = "filme_id")
     private Long id;
     private String titulo;
-    @ManyToMany(cascade={CascadeType.ALL})
+    @ManyToMany
     @JoinTable(name="filme_genero", joinColumns=@JoinColumn(name= "filme_id"))
     private Set<Genero> generos;
     @Column(nullable = true)
