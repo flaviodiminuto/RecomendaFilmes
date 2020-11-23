@@ -22,10 +22,10 @@ public class FilmeService {
     }
 
     public List<Filme> list() {
-        return null;
+        return repository.list("limit 50");
     }
 
     public void save(Filme filme) {
-
+        repository.persist(filme);
     }
 }
