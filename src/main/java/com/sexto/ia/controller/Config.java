@@ -23,9 +23,13 @@ public class Config {
     @Path("/filmes")
     @Produces(MediaType.TEXT_PLAIN)
     public String post() throws IOException, CsvValidationException{
+        service.zerarValores();
         long registrosSalvos = service.loadFilmes();
-        service.loadGeneros();
-        service.loadVinculos();
+        if(registrosSalvos > 0) {
+            service.loadGeneros();
+            service.loadVinculos();
+        }
+        service.zerarValores();
         return String.format("Foram sanvos %d registros com sucesso!", registrosSalvos);
     }
 }
