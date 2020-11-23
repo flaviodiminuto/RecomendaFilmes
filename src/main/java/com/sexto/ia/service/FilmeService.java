@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @ApplicationScoped
@@ -25,6 +26,7 @@ public class FilmeService {
         return repository.list("limit 50");
     }
 
+    @Transactional
     public void save(Filme filme) {
         repository.persist(filme);
     }
