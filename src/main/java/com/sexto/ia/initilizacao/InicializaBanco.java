@@ -3,13 +3,13 @@ package com.sexto.ia.initilizacao;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import com.sexto.ia.repository.FilmeRepository;
+import com.sexto.ia.service.CsvService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class InicializaBanco {
         //Ler arquivo converdo array[]
         if(repository.findById(1L) != null) return 0L;
         long contador = 0;
-        CSVReader reader = new CSVReader(new FileReader("src/main/resources/movies.csv"));
+        CSVReader reader = CsvService.readMovieFileCSVReader();
         String[] nextLine;
         long cont = 0;
         StringBuilder valores = new StringBuilder();
