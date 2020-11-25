@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @ApplicationScoped
 public class FilmeService {
@@ -32,8 +34,11 @@ public class FilmeService {
     }
 
     public List<Filme> listFilmeQuantidade(int quantidade) {
-        Long[] ids = {1L, 2L, 4L};
-        return repository.listByIds(Arrays.asList(ids.clone()));
+        Random random = new Random(System.currentTimeMillis());
+        int i = 0;
+        List<Long> ids = new ArrayList<>();
+        while (i++ < quantidade) ids.add((long)random.nextInt(9000));
+        return repository.listByIds(ids);
     }
 
     @Transactional
