@@ -16,8 +16,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,20 +62,14 @@ public class RecomendacaoController {
                     filmeService.updateAvaliacao(filme, recomendacao.getValue());
                 }
             });
-
-
             quantidadeObtida = filmes.size();
             quantidadeParaBusca += 10;
         }while (quantidadeRecomendacao > quantidadeObtida);
-        List<Filme> finalList = new ArrayList<>();
-        List<Filme> filmesList = new ArrayList<>(filmes);
-        for (int i = 0; i < quantidadeRecomendacao; i++) {
-            finalList.add(filmesList.get(i));
-        }
-        return finalList;
+        return filmes;
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response montaPerfil(PerfilInicial perfilInicial){
 
         return Response.ok().build();
