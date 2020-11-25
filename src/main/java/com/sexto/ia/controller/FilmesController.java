@@ -17,8 +17,14 @@ public class FilmesController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Filme> listaFilmes(){
-        List<Filme> filmes =  filmeService.list();
-        return filmes;
+        return filmeService.list();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/aleatorio/{quantidade}")
+    public List<Filme> listaFilmesQuantidade(@PathParam("quantidade")int quantidade){
+        return filmeService.listFilmeQuantidade(quantidade);
     }
 
     @GET
