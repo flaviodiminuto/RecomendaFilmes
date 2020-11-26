@@ -4,6 +4,7 @@ import com.sexto.ia.business.Recomendador;
 import com.sexto.ia.business.RecomendadorBuilder;
 import com.sexto.ia.model.Filme;
 import com.sexto.ia.model.PerfilInicial;
+import com.sexto.ia.model.Recomendacao;
 import com.sexto.ia.service.FilmeService;
 import com.sexto.ia.service.RecomendadorService;
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Path("/recomendacao")
@@ -44,7 +46,8 @@ public class RecomendacaoController{
                                  @PathParam("quantidade_recomendacao") int quantidadeRecomendacao )
                                 throws TasteException {
         List<Filme> filmes  = recomendadorService.recomenda(userId,quantidadeRecomendacao);
-        return Response.ok().entity(filmes).build();
+        Recomendacao recomendacao = new Recomendacao(userId,new Date(), filmes);
+        return Response.ok().entity(recomendacao).build();
     }
 
     @POST
@@ -54,7 +57,8 @@ public class RecomendacaoController{
         reloadRecomendador();
         Collection<Filme> filmeList = recomendadorService.recomenda(novoUsuarioId,10);
         logger.info("Recomendacoes entregues para o novo perfil");
-        return Response.ok().entity(filmeList).build();
+        Recomendacao recomendacao = new Recomendacao(novoUsuarioId,new Date(), filmeList);
+        return Response.ok().entity(recomendacao).build();
     }
 
     private void reloadRecomendador() throws IOException, TasteException {
