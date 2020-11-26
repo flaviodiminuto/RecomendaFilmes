@@ -13,6 +13,7 @@ import java.util.List;
 public class FilmeRepository implements PanacheRepositoryBase<Filme, Long> {
 
     public List<Filme> listByIds(List<Long> ids) {
+        if(ids.isEmpty()) return new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         ids.forEach(id -> stringBuilder.append(id).append(", "));
 

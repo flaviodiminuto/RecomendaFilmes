@@ -8,70 +8,59 @@ import com.sexto.ia.service.FilmeService;
 import com.sexto.ia.service.RecomendadorService;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.model.DataModel;
-import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/recomendacao")
-public class RecomendacaoController {
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class RecomendacaoController{
 
-    private static RecomendadorService service = null;
-    private static DataModel dataModel = null;
+    private RecomendadorService recomendadorService;
+    private DataModel dataModel;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Inject
     FilmeService filmeService;
 
+    public RecomendacaoController() throws IOException, TasteException {
+        dataModel = new Recomendador().getModeloFilmes();
+        Recommender recommender = new RecomendadorBuilder().buildRecommender(dataModel);
+        recomendadorService = new RecomendadorService(recommender, filmeService);
+    }
+
     @GET
     @Path("/{user_id}/{quantidade_recomendacao}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<?> recumenda(@PathParam("user_id") Long userId,
+    public Response recumenda(@PathParam("user_id") Long userId,
                                  @PathParam("quantidade_recomendacao") int quantidadeRecomendacao )
-                                throws IOException, TasteException {
-
-        int quantidadeParaBusca = quantidadeRecomendacao;
-        if(dataModel == null)
-            dataModel = new Recomendador().getModeloFilmes();
-        if (service == null) {
-            Recommender recommender = new RecomendadorBuilder().buildRecommender(dataModel);
-            service = new RecomendadorService(recommender);
-        }
-        int quantidadeObtida = 0;
-        List<Filme> filmes;
-        do {
-            List<RecommendedItem> recomendacoes = service.recomenda(userId, quantidadeParaBusca);
-            List<Long> ids = recomendacoes
-                    .stream()
-                    .map(RecommendedItem::getItemID)
-                    .collect(Collectors.toList());
-
-            filmes = filmeService.list(ids);
-
-// -- ALERTA DE GANBIARRA --2 atualiza a aviação dos filmes conforme são recalculados os modelos
-            filmes.forEach(filme -> {
-                RecommendedItem recomendacao =
-                        recomendacoes.stream().filter(item -> item.getItemID()  == filme.getId()).findFirst().get();
-                if(filme.getAvaliacao() == null || filme.getAvaliacao().floatValue() != recomendacao.getValue() ){
-                    filme.setAvaliacao((double) recomendacao.getValue());
-                    filmeService.updateAvaliacao(filme, recomendacao.getValue());
-                }
-            });
-            quantidadeObtida = filmes.size();
-            quantidadeParaBusca += 10;
-        }while (quantidadeRecomendacao > quantidadeObtida);
-        return filmes;
+                                throws TasteException {
+        List<Filme> filmes  = recomendadorService.recomenda(userId,quantidadeRecomendacao);
+        return Response.ok().entity(filmes).build();
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response montaPerfil(PerfilInicial perfilInicial){
+    public Response montaPerfil(PerfilInicial perfilInicial) throws IOException, TasteException {
+        logger.info("Inciando a montagem do novo perfil");
+        Long novoUsuarioId = recomendadorService.montaPerfilInicial(perfilInicial);
+        reloadRecomendador();
+        Collection<Filme> filmeList = recomendadorService.recomenda(novoUsuarioId,10);
+        logger.info("Recomendacoes entregues para o novo perfil");
+        return Response.ok().entity(filmeList).build();
+    }
 
-        return Response.ok().build();
+    private void reloadRecomendador() throws IOException, TasteException {
+        logger.info("Remotando o datamodel e recomendador");
+        dataModel = new Recomendador().getModeloFilmes();
+            Recommender recommender = new RecomendadorBuilder().buildRecommender(dataModel);
+            recomendadorService = new RecomendadorService(recommender, filmeService);
     }
 }
