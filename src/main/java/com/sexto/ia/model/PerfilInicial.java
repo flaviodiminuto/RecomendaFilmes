@@ -30,4 +30,13 @@ public class PerfilInicial {
     public void setFilmesMenosLegais(List<Long> filmesMenosLegais) {
         this.filmesMenosLegais = filmesMenosLegais;
     }
+
+    @Override
+    public String toString() {
+        return "PerfilInicial{" +
+                "filmesMaisLegais=" + filmesMaisLegais +
+                ", filmesNormais=" + filmesNormais +
+                ", filmesMenosLegais=" + filmesMenosLegais +
+                '}';
+    }
 }
