@@ -1,0 +1,184 @@
+---
+openapi: 3.0.3
+info:
+  title: Generated API
+  version: "1.0"
+paths:
+  /filmes:
+    get:
+      tags:
+        - filmes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFilme'
+    post:
+      tags:
+        - filmes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+  /filmes/aleatorio/{quantidade}:
+    get:
+      tags:
+        - filmes
+      parameters:
+        - name: quantidade
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFilme'
+  /filmes/genero/{genero_id}/{quantidade}:
+    get:
+      tags:
+        - filmes
+      parameters:
+        - name: genero_id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+        - name: quantidade
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          description: OK
+  /filmes/{id}:
+    get:
+      tags:
+        - filmes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+  /generos:
+    get:
+      tags:
+        - generos
+      responses:
+        "200":
+          description: OK
+  /recomendacao:
+    post:
+      tags:
+        - reocmendacao
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerfilInicial'
+      responses:
+        "200":
+          description: OK
+  /recomendacao/{user_id}/{quantidade_recomendacao}:
+    get:
+      tags:
+        - reocmendacao
+      parameters:
+        - name: quantidade_recomendacao
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+  /config/filmes:
+    post:
+      tags:
+        - config
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    ListLong:
+      type: array
+      items:
+        format: int64
+        type: integer
+    PerfilInicial:
+      type: object
+      properties:
+        filmesMaisLegais:
+          $ref: '#/components/schemas/ListLong'
+        filmesMenosLegais:
+          $ref: '#/components/schemas/ListLong'
+        filmesNormais:
+          $ref: '#/components/schemas/ListLong'
+    Genero:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        nome:
+          type: string
+    SetGenero:
+      uniqueItems: true
+      type: array
+      items:
+        $ref: '#/components/schemas/Genero'
+    Filme:
+      type: object
+      properties:
+        avaliacao:
+          format: double
+          type: number
+        generos:
+          $ref: '#/components/schemas/SetGenero'
+        id:
+          format: int64
+          type: integer
+        titulo:
+          type: string
+    ListFilme:
+      type: array
+      items:
+        $ref: '#/components/schemas/Filme'
