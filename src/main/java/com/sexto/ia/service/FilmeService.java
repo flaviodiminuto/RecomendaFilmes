@@ -50,4 +50,8 @@ public class FilmeService {
     public int updateAvaliacao(Filme filme, double avaliacao){
         return repository.update(" avaliacao = ?1 WHERE id = ?2", avaliacao, filme.getId());
     }
+
+    public List<Filme> findByGenero(long generoId, int quantidade) {
+        return repository.listByGenero(generoId,quantidade);
+    }
 }
