@@ -6,22 +6,23 @@ import com.sexto.ia.service.FilmeService;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/filmes")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class FilmesController {
 
     @Inject
     FilmeService filmeService;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public List<Filme> listaFilmes(){
         return filmeService.list();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/aleatorio/{quantidade}")
     public List<Filme> listaFilmesQuantidade(@PathParam("quantidade")int quantidade){
         return filmeService.listFilmeQuantidade(quantidade);
@@ -29,14 +30,19 @@ public class FilmesController {
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Filme getFilmeById(@PathParam("id") Long id){
         return filmeService.findById(id);
     }
 
+    @GET
+    @Path("/genero/{genero_id}/{quantidade}")
+    public Response getFilmeByGenero(@PathParam("genero_id") long generoId, @PathParam("quantidade") int quantidade ){
+        List<Filme> filmes = filmeService.findByGenero(generoId,quantidade);
+        return Response.ok(filmes).build();
+    }
+
+
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Filme post(Filme filme){
         filmeService.save(filme);
         return filme;

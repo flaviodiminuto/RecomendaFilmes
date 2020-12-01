@@ -9,6 +9,8 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 @ApplicationScoped
 public class FilmeRepository implements PanacheRepositoryBase<Filme, Long> {
 
@@ -17,7 +19,7 @@ public class FilmeRepository implements PanacheRepositoryBase<Filme, Long> {
         StringBuilder stringBuilder = new StringBuilder();
         ids.forEach(id -> stringBuilder.append(id).append(", "));
 
-        String query = String.format("SELECT f FROM Filme f WHERE id IN (%s)",
+        String query = format("SELECT f FROM Filme f WHERE id IN (%s)",
                 stringBuilder.substring(0,stringBuilder.length()-2));
         return  select(query).list();
     }
@@ -33,5 +35,10 @@ public class FilmeRepository implements PanacheRepositoryBase<Filme, Long> {
 
     private PanacheQuery<Filme> select(String select){
         return find(select);
+    }
+
+    public List<Filme> listByGenero(Long generoId, int quantidade) {
+        String query = "SELECT f FROM Filme f join f.generos g WHERE g.id = " + generoId;
+        return find(query).page(Page.ofSize(quantidade)).list();
     }
 }
