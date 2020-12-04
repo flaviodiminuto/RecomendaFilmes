@@ -2,22 +2,33 @@ package com.sexto.ia.service;
 
 import com.sexto.ia.model.Filme;
 import com.sexto.ia.model.PerfilInicial;
+import com.sexto.ia.repository.UsuarioRepository;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class RecomendadorService{
 
-    private final Recommender recomendador;
-    private final FilmeService filmeService;
+    @Inject
+    UsuarioRepository repository;
+
+    private Recommender recomendador;
+    private FilmeService filmeService;
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    public RecomendadorService(){
+
+    }
 
     public RecomendadorService(Recommender recommender, FilmeService filmeService) {
         this.recomendador = recommender;
@@ -60,7 +71,8 @@ public class RecomendadorService{
         String[] ultimaLinha = CsvService.getLastRowFromRatingFile();
 // ALERTA DE GANBIARRA -- prefira utilizar um sistema de filas para esta etapa
 // para garantir a ordem correta de usuários novos inseridos
-        long novoUsuarioId = Long.parseLong(ultimaLinha[0])+1;
+        Long novoUsuarioId = perfilInicial.getUsuarioId() == null ? Long.parseLong(ultimaLinha[0]) + 1 :
+                perfilInicial.getUsuarioId() == null ? repository.getMaxId() + 1 : perfilInicial.getUsuarioId();
         // Salvar os filmes MAIS LEGAIS para o NOVO USUARIO no arquivo
         // Salvar os filmes de afinidade NORMAL para o NOVO USUARIO usuario no arquivo
         // Salvar os filmes MENOS LEGAIS para o NOVO USUARIO no arquivo

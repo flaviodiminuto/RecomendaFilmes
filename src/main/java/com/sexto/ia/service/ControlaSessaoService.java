@@ -22,20 +22,8 @@ public class ControlaSessaoService {
 
     public NewCookie mantemSessao(Map<String, Cookie> cookieMap) throws SessaoExpiradaException {
         Cookie cookie = cookieMap.get(sessionName);
-        NewCookie novoCookie;
         if (cookieValido(cookie)) {
-            Instant expyre = Instant.now().plusSeconds(duracao);
-            novoCookie = new NewCookie(cookie.getName(),
-                    cookie.getValue(),
-                    cookie.getPath(),
-                    cookie.getDomain(),
-                    cookie.getVersion(),
-                    null,
-                    duracao,
-                    Date.from(expyre),
-                    false,
-                    false);
-            return novoCookie;
+            return getCookiePredicadoValido();
         }
         throw new SessaoExpiradaException();
     }
@@ -44,7 +32,7 @@ public class ControlaSessaoService {
         Instant expira = Instant.now().plusSeconds(duracao);
         return new NewCookie(sessionName,
                 validValue,
-                null,
+                "",
                 null,
                 1,
                 null,
