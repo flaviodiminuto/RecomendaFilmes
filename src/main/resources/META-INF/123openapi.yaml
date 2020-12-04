@@ -1,0 +1,183 @@
+---
+openapi: 3.0.3
+info:
+  title: Generated API
+  version: "1.0"
+paths:
+  /usuario:
+    post:
+      tags:
+        - usuarios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Autenticacao'
+      responses:
+        "200":
+          description: OK
+  /usuario/{id}:
+    get:
+      tags:
+        - usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+  /usuario/{id}/chave/{segredo}:
+    get:
+      tags:
+        - usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+        - name: segredo
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /filmes:
+    get:
+      tags:
+        - filmes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFilme'
+    post:
+      tags:
+        - filmes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+  /filmes/aleatorio/{quantidade}:
+    get:
+      tags:
+        - filmes
+      parameters:
+        - name: quantidade
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFilme'
+  /filmes/genero/{genero_id}/{quantidade}:
+    get:
+      tags:
+        - filmes
+      parameters:
+        - name: genero_id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+        - name: quantidade
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          description: OK
+  /filmes/{id}:
+    get:
+      tags:
+        - filmes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'
+  /generos:
+    get:
+      tags:
+        - generos
+      responses:
+        "200":
+          description: OK
+  /recomendacao:
+    post:
+      tags:
+        - reocmendacao
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerfilInicial'
+      responses:
+        "200":
+          description: OK
+  /recomendacao/{user_id}/{quantidade_recomendacao}:
+    get:
+      tags:
+        - reocmendacao
+      parameters:
+        - name: quantidade_recomendacao
+          in: path
+          required: true
+          schema:
+            format: int32
+            type: integer
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+  /config/filmes:
+    post:
+      tags:
+        - config
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
